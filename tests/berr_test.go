@@ -2,6 +2,8 @@ package berr_test
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/bbfh-dev/berr"
@@ -13,4 +15,25 @@ func TestBerrNesting(test *testing.T) {
 	assert.DeepEqual(test, berr.New("example", errors.New("test")).Error(), "example: test")
 	assert.DeepEqual(test, berr.New("example", berr.New("nested", errors.New("test"))).Error(), "example: nested: test")
 	assert.DeepEqual(test, berr.New("example", berr.New("nested", nil)), nil)
+}
+
+func TestBerr(test *testing.T) {
+	err := berr.WithContext(
+		"another example",
+		berr.WithContext(
+			"Hello World!",
+			errors.New("Yet another error!"),
+			"c",
+			"Something Something",
+			"d",
+			map[string]bool{"x": true, "y": false, "z": true},
+		),
+		"a",
+		123,
+		"b",
+		456,
+	)
+	fmt.Println("```test")
+	berr.Fexpand(os.Stdout, err)
+	fmt.Println("\n```")
 }

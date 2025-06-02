@@ -53,3 +53,29 @@ func (boxed boxedErr) Tail() string {
 	}
 	return boxed.err.Error()
 }
+
+func (boxed boxedErr) Expand(writer io.Writer, index int) {
+	if boxed.err == nil {
+		return
+	}
+
+	fmt.Fprintf(writer, "%d. %q\n", index, boxed.label)
+	length := len(boxed.ctx)
+	if length != 0 {
+		for i := range length / 2 {
+			j := i * 2
+			if j+1 > length {
+				fmt.Fprintf(writer, "└── %s: ???\n", boxed.ctx[j])
+				continue
+			}
+			fmt.Fprintf(writer, "└── %s: %#v\n", boxed.ctx[j], boxed.ctx[j+1])
+		}
+	}
+
+	if err, ok := boxed.err.(boxedErr); ok {
+		err.Expand(writer, index+1)
+		return
+	}
+
+	fmt.Fprintf(writer, "%d. %q\n", index+1, boxed.err.Error())
+}
