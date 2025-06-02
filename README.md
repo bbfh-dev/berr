@@ -2,12 +2,8 @@
 
 Simple library that focuses on improving the errors in two ways:
 
-<!-- vim-markdown-toc GFM -->
-
-* [📜 Error trace](#-error-trace)
-* [🖨️ Error context](#-error-context)
-
-<!-- vim-markdown-toc -->
+- [📜 Error trace](#-error-trace)
+- [🖨️ Error context](#%EF%B8%8F-error-context)
 
 > [!NOTE]
 > Both `berr.New()` and `berr.WithContext()` return `error` interface, meaning that no function signature needs to change to use this library.
