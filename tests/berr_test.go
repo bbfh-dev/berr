@@ -43,5 +43,5 @@ func TestBerr(test *testing.T) {
 func TestIgnore(test *testing.T) {
 	var buffer bytes.Buffer
 	_, err := buffer.ReadByte()
-	assert.Equal(test, berr.New("shouldn't fail", err).Ignore(io.EOF).HasError(), false)
+	assert.NilError(test, berr.New("shouldn't fail", err).Ignore(io.EOF))
 }

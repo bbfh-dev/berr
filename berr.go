@@ -88,10 +88,8 @@ func (boxed boxedErr) Expand(writer io.Writer, index int) {
 
 // Doesn't treat provided errors as errors
 func (boxed boxedErr) Ignore(errs ...error) BoxedError {
-	for _, err := range errs {
-		if boxed.err == err {
-			boxed.err = nil
-		}
+	if slices.Contains(errs, boxed.err) {
+		return nil
 	}
 	return boxed
 }
