@@ -3,11 +3,11 @@ package berr
 import (
 	"fmt"
 	"io"
+	"slices"
 )
 
 type BoxedError interface {
 	error
-	HasError() bool
 	Ignore(errs ...error) BoxedError
 }
 
@@ -27,16 +27,6 @@ func New(label string, err error) BoxedError {
 		err:   err,
 		ctx:   nil,
 	}
-}
-
-func (boxed boxedErr) HasError() bool {
-	if boxed.err == nil {
-		return false
-	}
-	if err, ok := boxed.err.(boxedErr); ok {
-		return err.HasError()
-	}
-	return boxed.err != nil
 }
 
 func (boxed boxedErr) Error() string {
