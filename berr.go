@@ -8,6 +8,7 @@ import (
 type BoxedError interface {
 	error
 	HasError() bool
+	Ignore(errs ...error) BoxedError
 }
 
 type boxedErr struct {
@@ -83,4 +84,14 @@ func (boxed boxedErr) Expand(writer io.Writer, index int) {
 	}
 
 	fmt.Fprintf(writer, "%d. %q\n", index+1, boxed.err.Error())
+}
+
+// Doesn't treat provided errors as errors
+func (boxed boxedErr) Ignore(errs ...error) BoxedError {
+	for _, err := range errs {
+		if boxed.err == err {
+			boxed.err = nil
+		}
+	}
+	return boxed
 }

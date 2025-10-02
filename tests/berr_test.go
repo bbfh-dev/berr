@@ -1,8 +1,10 @@
 package berr_test
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"testing"
 
@@ -36,4 +38,10 @@ func TestBerr(test *testing.T) {
 	fmt.Println("```test")
 	berr.Fexpand(os.Stdout, err)
 	fmt.Println("\n```")
+}
+
+func TestIgnore(test *testing.T) {
+	var buffer bytes.Buffer
+	_, err := buffer.ReadByte()
+	assert.Equal(test, berr.New("shouldn't fail", err).Ignore(io.EOF).HasError(), false)
 }
