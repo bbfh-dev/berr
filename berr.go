@@ -5,6 +5,11 @@ import (
 	"io"
 )
 
+type BoxedError interface {
+	error
+	HasError() bool
+}
+
 type boxedErr struct {
 	label string
 	err   error
@@ -12,7 +17,7 @@ type boxedErr struct {
 	next  error
 }
 
-func New(label string, err error) error {
+func New(label string, err error) BoxedError {
 	if err == nil {
 		return nil
 	}
